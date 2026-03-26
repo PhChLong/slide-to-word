@@ -2,3 +2,4 @@
 data/*
 learn/*
 *.pyc
+__pycache__
