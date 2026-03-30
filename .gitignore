@@ -3,3 +3,4 @@ data/*
 learn/*
 *.pyc
 __pycache__
+t.*
