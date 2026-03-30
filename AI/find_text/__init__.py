@@ -1,0 +1,1 @@
+from .paddleOCR import load_models,  PaddleOCR

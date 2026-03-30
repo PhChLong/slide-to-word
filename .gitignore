@@ -4,3 +4,4 @@ learn/*
 *.pyc
 __pycache__
 t.*
+paddle_models
