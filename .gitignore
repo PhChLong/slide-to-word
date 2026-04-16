@@ -9,3 +9,5 @@ dataset/labels/*
 dataset/images/*
 dataset/rf_data/*
 dataset/rf_label/*
+runs/*
+*.pt

@@ -10,9 +10,9 @@ rf_label_dir = Path("rf_label")
 
 #@ tạo folder image
 train_dir = Path("images/train")
-valid_dir = Path("images/valid")
+valid_dir = Path("images/val")
 train_label_dir = Path("labels/train")
-valid_label_dir = Path('labels/valid')
+valid_label_dir = Path('labels/val')
 
 if train_dir.exists():
     shutil.rmtree(train_dir)
