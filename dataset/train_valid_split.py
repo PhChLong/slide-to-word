@@ -48,4 +48,3 @@ for i in range(num_train):
 for i in range(num_train, len(images_dirs)):
     shutil.copy(labels_dirs[i], valid_label_dir / Path(labels_dirs[i].name))
     shutil.copy(images_dirs[i], valid_dir / Path(images_dirs[i].name))
-    
