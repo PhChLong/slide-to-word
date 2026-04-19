@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App tặng gái</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SHARED HEADER (injected per page)
+══════════════════════════════════════ -->
+
+<!-- ══════════════════════════════════════
+     PAGE 1 — UPLOAD
+══════════════════════════════════════ -->
+<div id="page-upload" class="page upload-page active">
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-icon">Long</div>
+      <div class="logo-text">tặng<span> Trang</span></div>
+    </div>
+    <nav class="steps">
+      <div class="step active" id="step-1"><div class="step-num">1</div>UPLOAD</div>
+      <div class="step-sep"></div>
+      <div class="step" id="step-2"><div class="step-num">2</div>CROP</div>
+      <div class="step-sep"></div>
+      <div class="step" id="step-3"><div class="step-num">3</div>XỬ LÝ</div>
+    </nav>
+  </header>
+
+  <div class="upload-body">
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <div class="drop-icon-wrap">🖼️</div>
+      <div class="drop-title">Kéo thả ảnh vào đây</div>
+      <div class="drop-sub">hoặc bấm để chọn · JPG / PNG / WEBP</div>
+    </div>
+    <input type="file" id="file-input" multiple accept="image/*" />
+
+    <div id="preview-strip" class="preview-strip"></div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-info" id="upload-count"></span>
+    <button class="btn btn-primary" id="btn-to-crop" disabled>
+      <span class="btn-lbl">NEXT→</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 2 — CROP
+══════════════════════════════════════ -->
+<div id="page-crop" class="page crop-page">
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-icon">Long</div>
+      <div class="logo-text">tặng<span> Trang</span></div>
+    </div>
+    <nav class="steps">
+      <div class="step done"   id="step-1"><div class="step-num">✓</div>UPLOAD</div>
+      <div class="step-sep"></div>
+      <div class="step active" id="step-2"><div class="step-num">2</div>CROP</div>
+      <div class="step-sep"></div>
+      <div class="step"        id="step-3"><div class="step-num">3</div>XỬ LÝ</div>
+    </nav>
+  </header>
+
+  <div class="crop-layout">
+
+    <!-- filmstrip -->
+    <div class="filmstrip" id="filmstrip"></div>
+
+    <!-- canvas -->
+    <div class="crop-canvas-wrap">
+      <canvas id="crop-canvas"></canvas>
+    </div>
+
+    <!-- controls -->
+    <div class="crop-controls">
+      <div class="ctrl-section">
+        <div class="ctrl-title">Điều hướng</div>
+        <div class="nav-row">
+          <button class="btn btn-secondary btn-icon-only" id="btn-prev-crop" title="Ảnh trước">←</button>
+          <span class="img-counter" id="img-counter">1 / 1</span>
+          <button class="btn btn-secondary btn-icon-only" id="btn-next-crop" title="Ảnh tiếp">→</button>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <div class="ctrl-title">Hướng dẫn</div>
+        <div class="crop-hint">
+          <strong>Kéo 4 góc</strong> để chọn vùng văn bản.<br/><br/>
+          Các góc có thể di chuyển tự do — điều chỉnh cho khớp với mép tài liệu.
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <div class="ctrl-title">Vị trí góc</div>
+        <div class="corner-coords">
+          <div class="coord-item" id="coord-tl">TL<span>—</span></div>
+          <div class="coord-item" id="coord-tr">TR<span>—</span></div>
+          <div class="coord-item" id="coord-bl">BL<span>—</span></div>
+          <div class="coord-item" id="coord-br">BR<span>—</span></div>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <button class="btn btn-ghost" id="btn-reset-crop" style="width:100%;">↺ Reset góc</button>
+      </div>
+
+      <div style="margin-top:auto; display:flex; flex-direction:column; gap:8px;">
+        <button class="btn btn-ghost" id="btn-back-to-upload" style="width:100%;">
+          ← Quay lại Upload
+        </button>
+        <button class="btn btn-primary" id="btn-done-crop" style="width:100%;">
+          <span class="btn-lbl">XONG → XỬ LÝ</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.crop-layout -->
+</div><!-- /#page-crop -->
+
+
+<!-- ══════════════════════════════════════
+     PAGE 3 — PROCESS
+══════════════════════════════════════ -->
+<div id="page-process" class="page process-page">
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-icon">Long</div>
+      <div class="logo-text">tặng<span> Trang</span></div>
+    </div>
+    <nav class="steps">
+      <div class="step done"   id="step-1"><div class="step-num">✓</div>UPLOAD</div>
+      <div class="step-sep"></div>
+      <div class="step done"   id="step-2"><div class="step-num">✓</div>CROP</div>
+      <div class="step-sep"></div>
+      <div class="step active" id="step-3"><div class="step-num">3</div>XỬ LÝ</div>
+    </nav>
+  </header>
+
+  <div class="process-layout">
+
+    <!-- LEFT: ảnh đã crop + chạy OCR -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Ảnh sau khi crop</span>
+        <span class="panel-badge" id="result-badge">CHƯA XỬ LÝ</span>
+      </div>
+      <div class="panel-body">
+
+        <div class="cropped-grid" id="cropped-grid"></div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">🌐 Ngôn ngữ</div>
+        <div class="field-group">
+          <select id="ocr-lang">
+            <option value="vie">Tiếng Việt</option>
+            <option value="eng">English</option>
+            <option value="vie+eng">Việt + Anh</option>
+            <option value="chi_sim">中文 Giản thể</option>
+            <option value="jpn">日本語</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="btn-back-to-crop">← Quay lại Crop</button>
+          <button class="btn btn-primary" id="btn-run-ocr">
+            <span class="btn-lbl">▶ Run</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+ 
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+ 
+        <div class="log-wrap" id="log-wrap"></div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: kết quả + xuất -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Kết quả & Xuất Word</span>
+      </div>
+      <div class="panel-body">
+
+        <textarea id="result-text"
+          placeholder="Kết quả sẽ hiện ở đây...&#10;&#10;Bạn có thể chỉnh sửa trước khi xuất."></textarea>
+
+        <div class="actions">
+          <button class="btn btn-ghost" style="font-size:10px;" id="btn-copy" disabled>⎘ SAO CHÉP</button>
+          <button class="btn btn-ghost" style="font-size:10px;" id="btn-clear-text" disabled>✕ XÓA</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">📝 Cài đặt xuất Word</div>
+
+        <div class="word-settings">
+          <div class="field-group">
+            <label>Font</label>
+            <select id="word-font">
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Arial">Arial</option>
+              <option value="Calibri" selected>Calibri</option>
+              <option value="Tahoma">Tahoma</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Cỡ chữ</label>
+            <input type="number" id="word-size" value="13" min="8" max="72" />
+          </div>
+          <div class="field-group">
+            <label>Lề trái (cm)</label>
+            <input type="number" id="word-margin-left" value="3" step="0.5" />
+          </div>
+          <div class="field-group">
+            <label>Lề phải (cm)</label>
+            <input type="number" id="word-margin-right" value="2" step="0.5" />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Tên file</label>
+          <input type="text" id="word-filename" value="ket_qua_ocr" placeholder="ten_file" />
+        </div>
+
+        <div class="toggle-row">
+          <span class="toggle-label">Giữ nguyên bố cục dòng</span>
+          <label class="toggle">
+            <input type="checkbox" id="keep-layout" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="btn-export" disabled>
+            <span class="btn-lbl">⬇ XUẤT WORD</span>
+          </button>
+          <button class="btn btn-secondary" id="btn-export-txt" disabled>TXT</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.process-layout -->
+</div><!-- /#page-process -->
+
+<script src="main.js"></script>
+</body>
+</html>
