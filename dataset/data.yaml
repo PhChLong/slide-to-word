@@ -1,0 +1,18 @@
+path: D:/Github Repos/slide-to-word/dataset
+train: images/train
+val: images/val
+
+# Keypoints
+kpt_shape: [4, 3] # number of keypoints, number of dims (2 for x,y or 3 for x,y,visible)
+
+# Classes
+names:
+  0: slide
+
+# Keypoint names per class
+kpt_names:
+  0:
+    - top_left
+    - top_right
+    - bottom_right
+    - bottom_left
