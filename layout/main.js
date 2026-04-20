@@ -29,14 +29,21 @@ document.getElementById('btn-back-to-crop').addEventListener('click', () => {
   initCropPage();
 });
 
+/**
+ * Đơn giản là nhảy đến page có id được chọn
+ * @param {int} pageId - pageId của page muốn nhảy tới
+ * @returns {void}
+ */
 function goTo(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); //? làm cho mọi page không active nữa
+  document.getElementById(pageId).classList.add('active'); //? làm cho page mong muốn active
   document.querySelectorAll('.step').forEach(s => {
     s.classList.remove('active', 'done');
   });
-  const order = ['page-upload','page-crop','page-process'];
-  const idx = order.indexOf(pageId);
+  const order = ['page-upload','page-crop','page-process']; //? Hiện tại thì chỉ có 3 page, và đây là list ra id của 3 page
+  const idx = order.indexOf(pageId); //? lấy ra idx của page muốn nhảy tới
+
+  //? mỗi page sẽ có 1 navigation bar, với mỗi nav gồm 3 step, ví dụ như nhảy đến page 2 thì nó phải làm cho step-1 done và step-2 active
   order.forEach((id, i) => {
     const stepEl = document.getElementById('step-' + (i+1));
     if (!stepEl) return;
@@ -54,12 +61,14 @@ const previewStrip = document.getElementById('preview-strip');
 const btnToCrop   = document.getElementById('btn-to-crop');
 const uploadCount = document.getElementById('upload-count');
 
+//@ dropZone
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
   e.preventDefault(); dropZone.classList.remove('drag-over');
   addFiles([...e.dataTransfer.files]);
 });
+
 fileInput.addEventListener('change', () => addFiles([...fileInput.files]));
 
 function addFiles(files) {
@@ -94,14 +103,32 @@ function renderUploadPreviews() {
   btnToCrop.disabled = n === 0;
 }
 
-btnToCrop.addEventListener('click', () => {
-  // init crop data with default full-image corners
-  state.cropData = state.files.map(() => ({
-    tl: {x:0.05, y:0.05},
-    tr: {x:0.95, y:0.05},
-    br: {x:0.95, y:0.95},
-    bl: {x:0.05, y:0.95},
-  }));
+btnToCrop.addEventListener('click', async () =>  {
+  try{
+    const formData = new FormData();
+    for(let i = 0; i < state.files.length; i++) {
+      formData.append('images', state.files[i]);
+    }
+  
+    const response = await fetch('http://localhost:8000/detect-corners-batch',
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json()
+    state.cropData = data
+  }
+  catch (error){
+    // init crop data with default full-image corners
+    state.cropData = state.files.map(() => ({
+      tl: {x:0.05, y:0.05},
+      tr: {x:0.95, y:0.05},
+      br: {x:0.95, y:0.95},
+      bl: {x:0.05, y:0.95},
+    }));
+  }
+  console.log(state.cropData)
   state.currentCropIdx = 0;
   state.croppedCanvases = new Array(state.files.length).fill(null);
   goTo('page-crop');
