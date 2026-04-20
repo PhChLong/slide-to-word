@@ -104,6 +104,7 @@ function renderUploadPreviews() {
 }
 
 btnToCrop.addEventListener('click', async () =>  {
+  //@ try to use yolo to detect the corners, if fails, autocrop
   try{
     const formData = new FormData();
     for(let i = 0; i < state.files.length; i++) {
