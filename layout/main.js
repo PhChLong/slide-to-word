@@ -52,6 +52,51 @@ function goTo(pageId) {
   });
 }
 
+// Light Box
+const lightBox = document.getElementById('lightbox');
+const lightBoxImg = document.getElementById('lightbox-img');
+const lightBoxCounter = document.getElementById('lightbox-counter');
+const lightBoxPrev = document.getElementById('lightbox-prev');
+const lightBoxNext = document.getElementById('lightbox-next');
+let lightBoxIdx = 0;
+
+function openLightBox(idx) {
+  lightBoxIdx = idx;
+  lightBoxImg.src = state.imageUrls[idx];
+  lightBoxCounter.textContent = `${idx + 1} / ${state.imageUrls.length}`;
+  lightBoxPrev.disabled = idx === 0;
+  lightBoxNext.disabled = idx === state.imageUrls.length - 1;
+  lightBox.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightBox() {
+  lightBox.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('lightbox-backdrop').addEventListener('click', closeLightBox);
+document.getElementById('lightbox-close').addEventListener('click', closeLightBox);
+
+lightBoxPrev.addEventListener('click', () => {
+  if (lightBoxIdx > 0) {
+    openLightBox(lightBoxIdx - 1);
+  }
+});
+
+lightBoxNext.addEventListener('click', () => {
+  if (lightBoxIdx < state.imageUrls.length - 1) {
+    openLightBox(lightBoxIdx + 1);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (lightBox.style.display === 'none') return;
+  if (e.key === 'Escape') closeLightBox();
+  if (e.key === 'ArrowLeft') lightBoxPrev.click();
+  if (e.key === 'ArrowRight') lightBoxNext.click();
+});
+
 // ══════════════════════════════════════════════════════
 //  PAGE 1 — UPLOAD
 // ══════════════════════════════════════════════════════
@@ -86,6 +131,10 @@ function renderUploadPreviews() {
     const div = document.createElement('div');
     div.className = 'preview-thumb';
     div.innerHTML = `<img src="${state.imageUrls[i]}" /><button class="remove-btn" data-i="${i}">✕</button>`;
+    div.querySelector('img').addEventListener('click', e =>{
+      e.stopPropagation();
+      openLightBox(i);
+    });
     previewStrip.appendChild(div);
   });
   previewStrip.querySelectorAll('.remove-btn').forEach(btn => {
@@ -458,19 +507,26 @@ function initProcessPage() {
   resultBadge.className = 'panel-badge';
   [btnExport, btnExportTxt, btnCopy, btnClearTxt].forEach(b => b.disabled = true);
 
+//build url list for lightbox
+  const croppedUrls = state.files.map((_, i) => 
+    state.croppedCanvases[i] ? state.croppedCanvases[i].toDataURL('image/jpeg', 0.95) : state.imageUrls[i]
+  );
+
   state.files.forEach((f, i) => {
     const div = document.createElement('div');
     div.className = 'cropped-item';
+    div.style.cursor = 'zoom-in';
     const canvas = state.croppedCanvases[i];
     if (canvas) {
       const img = document.createElement('img');
-      img.src = canvas.toDataURL('image/jpeg', 0.9);
+      img.src = croppedUrls[i];
       div.appendChild(img);
     } else {
       const img = document.createElement('img');
       img.src = state.imageUrls[i];
       div.appendChild(img);
     }
+    div.addEventListener('click', () => openLightBox(i, croppedUrls));
     const statusDot = document.createElement('div');
     statusDot.className = 'item-status';
     statusDot.id = `item-status-${i}`;
