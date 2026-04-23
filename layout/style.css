@@ -86,8 +86,15 @@ body::before {
   transition: all .2s;
 }
 
-.step.active { color: var(--accent); background: rgba(232,255,71,.08); }
-.step.done   { color: var(--text); }
+.step.active { 
+  /*color: var(--accent); background: rgba(232,255,71,.08);*/ 
+  color: red;
+  background: rgba(255,71,71,.08);
+}
+
+.step.done { 
+  color: var(--text); 
+}
 
 .step-num {
   width: 20px; height: 20px;

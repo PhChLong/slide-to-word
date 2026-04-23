@@ -37,19 +37,28 @@ document.getElementById('btn-back-to-crop').addEventListener('click', () => {
 function goTo(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); //? làm cho mọi page không active nữa
   document.getElementById(pageId).classList.add('active'); //? làm cho page mong muốn active
-  document.querySelectorAll('.step').forEach(s => {
+  /*document.querySelectorAll('.step').forEach(s => {
     s.classList.remove('active', 'done');
-  });
+  });*/
+  
+  /*const stepInPage = currentPage.querySelector('.step');
   const order = ['page-upload','page-crop','page-process']; //? Hiện tại thì chỉ có 3 page, và đây là list ra id của 3 page
   const idx = order.indexOf(pageId); //? lấy ra idx của page muốn nhảy tới
 
-  //? mỗi page sẽ có 1 navigation bar, với mỗi nav gồm 3 step, ví dụ như nhảy đến page 2 thì nó phải làm cho step-1 done và step-2 active
-  order.forEach((id, i) => {
-    const stepEl = document.getElementById('step-' + (i+1));
-    if (!stepEl) return;
-    if (i < idx)  stepEl.classList.add('done');
-    if (i === idx) stepEl.classList.add('active');
-  });
+  order.forEach((stepEl, i) => {
+    stepEl.classList.remove('active', 'done');
+
+    if(i < idx) {
+      stepEl.classList.add('done');
+
+      const numEl = stepEl.querySelector('.step-num');
+      if(numEl) numEl.textContent = '✓';
+    }else if  (i === idx) {
+      stepEl.classList.add('active');
+      const numEl = stepEl.querySelector('.step-num');
+      if(numEl) numEl.textContent = i + 1;
+    }
+  });*/
 }
 
 // Light Box
